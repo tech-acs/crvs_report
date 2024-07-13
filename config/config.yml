@@ -17,7 +17,7 @@ default:
   # To run particular tables, run their table_id (section_3: ["3_2","3_4"])
   tables_selected:
     section_3: [""]
-    section_4: ["4_3"]
+    section_4: ["4_2", "4_3"]
     section_5: [""]
     section_6: [""]
     section_7: [""]
@@ -221,7 +221,7 @@ default:
     - table_id: 3_1
       table_name: "Summary Table"
       function_name: "create_t3.1"
-      function_args: list(sample_data_b, date_var = birth1a, data_year = 2021, tablename = "Table_4_3"))
+      function_args: list()
     - table_id: 3_2
       table_name: "Detailed Table"
       function_name: "create_t3.2_t3.3"
@@ -273,10 +273,15 @@ default:
     - table_id: 4_2
       table_name: "Detailed Table"
       function_name: "create_t4.2"
-      function_args: list()
+      function_args:
+        data: birth_data
+        date_var: birth1a
+        data_year: 2020
+        tablename: "Table_4_2"
+        output_path: output_tables_path
     - table_id: 4_3
       table_name: "Statistics Table"
-      function_name: "create_t4.3_test"
+      function_name: "create_t4.3"
       function_args:
         data: birth_data
         date_var: birth1a
