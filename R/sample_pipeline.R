@@ -23,8 +23,23 @@ marriage_variables <- config$marriage_mapper
 divorce_variables <- config$divorce_mapper
 
 
+# Load the estimated data
+birth_estimates <- read.csv("data/processed/created_birth_estim.csv")
+death_estimates <- read.csv("data/processed/created_death_estim.csv")
+pop_estimates <- read.csv("data/processed/created_population_estim.csv")
+
 # Load the birth data
 birth_data <- read_sample_birth_data()
+
+# Add timeliness data
+birth_data <- construct_timeliness(birth_data)
+# Add dobyr
+birth_data <- add_year_column(birth_data, date_col = "birth1a", year_col = "dobyr")
+# Add boryr
+birth_data <- add_year_column(birth_data, date_col = "birth1b",  year_col = "doryr")
+
+
+
 # Load the death data
 death_data <- read_sample_death_data()
 # Load the marriage data
