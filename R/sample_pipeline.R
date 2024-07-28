@@ -3,6 +3,7 @@
 library(yaml)
 library(crvsreportpackage)
 library(rlang)
+library(dplyr)
 
 # Load the configuration
 config <- yaml.load_file("./config/config.yml")
@@ -29,15 +30,18 @@ death_estimates <- read.csv("data/processed/created_death_estim.csv")
 pop_estimates <- read.csv("data/processed/created_population_estim.csv")
 
 # Load the birth data
-birth_data <- read_sample_birth_data()
+birth_data <- read.csv("data/raw/created_birth_data.csv")
 
 # Add timeliness data
 birth_data <- construct_timeliness(birth_data)
 # Add dobyr
-birth_data <- add_year_column(birth_data, date_col = "birth1a", year_col = "dobyr")
+birth_data <- construct_year(birth_data, date_col = "birth1a", year_col = "dobyr")
 # Add boryr
-birth_data <- add_year_column(birth_data, date_col = "birth1b",  year_col = "doryr")
-
+birth_data <- construct_year(birth_data, date_col = "birth1b",  year_col = "doryr")
+# Add empty birth1j
+birth_data <- add_na_column(birth_data)
+# Add fertility age groups
+fertility_rates <- calculate_fertility_rates(birth_data, pop_estimates)
 
 
 # Load the death data
@@ -92,6 +96,8 @@ filtered_tables <- lapply(all_tables, function(table) {
 
 # Remove NULL values from the filtered list
 filtered_tables <- Filter(Negate(is.null), filtered_tables)
+
+table_4_1 <- create_t4.1(birth_data, birth_estimates, pop_estimates, date_var = "dobyr", tablename = "Table_4_1")
 
 # Iterate over the filtered tables and call the respective functions
 for (table in filtered_tables) {

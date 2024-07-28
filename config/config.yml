@@ -273,15 +273,15 @@ default:
         data: birth_data
         est_data: birth_estimates
         pops: pop_estimates
-        date_var: dobyr
-        tablename: "Table_4_2"
+        date_var: "dobyr"
+        tablename: "Table_4_1"
         output_path: output_tables_path
     - table_id: 4_2
       table_name: "Live births by place of occurrence and sex of newborn"
       function_name: "create_t4.2"
       function_args:
         data: birth_data
-        date_var: dobyr
+        date_var: "dobyr"
         data_year: 
         tablename: "Table_4_2"
         output_path: output_tables_path
@@ -311,7 +311,7 @@ default:
       function_args:
         data: birth_data
         data_year:
-        by_var: birth3c
+        by_var: "birth3c"
         rural_urban: "urban"
         col_var:
         tablename: "Table_4_5"
@@ -322,7 +322,7 @@ default:
       function_args:
         data: birth_data
         data_year:
-        by_var: birth3c
+        by_var: "birth3c"
         rural_urban: "rural"
         col_var:
         tablename: "Table_4_6"
@@ -332,7 +332,7 @@ default:
       function_name: "create_t4.7"
       function_args:
         data: birth_data
-        date_var: dobyr
+        date_var: "dobyr"
         data_year:
         tablename: "Table_4_7"
         output_path: output_tables_path
@@ -343,9 +343,9 @@ default:
         data: birth_data
         est_data: birth_estimates
         pops: pop_estimates
-        date_var: dobyr
+        date_var: "dobyr"
         data_year:
-        by_var: birth1c
+        by_var: "birth1c"
         tablename: "Table_4_8"
         output_path: output_tables_path
     - table_id: 4_9
