@@ -1,3 +1,5 @@
+# This script provides a pipeline to run with the test data in the package.
+
 library(yaml)
 library(crvsreportpackage)
 library(rlang)
@@ -20,6 +22,7 @@ death_variables <- config$deaths_mapper
 marriage_variables <- config$marriage_mapper
 divorce_variables <- config$divorce_mapper
 
+
 # Load the birth data
 birth_data <- read_sample_birth_data()
 # Load the death data
@@ -29,12 +32,10 @@ marriage_data <- read_sample_marriage_data()
 # Load the death data
 divorce_data <- read_sample_divorce_data()
 
-
 ## HERE THERE SHOULD BE A FILTER OF THE DATA LOADED USING THE BIRTH VARIABLES
 ## HERE THERE SHOULD BE A VARIABLE RENAMING USING THE MAPPERS
 ## HERE THERE SHOULD BE SOME DATA VALIDATION, TO ENSURE DATA IS AS EXPECTED
 ## HERE THERE COULD BE SOME SUMMARY STATISTICS OR DATA CLEANING
-
 
 # Access tables configuration
 all_tables <- config$tables
