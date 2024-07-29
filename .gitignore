@@ -21,6 +21,10 @@
 .Rproj.user/
 .Rproj.user/**
 
+# Working Data
+data/processed/*.csv
+data/raw/*.csv
+
 # Produced vignettes
 vignettes/*.html
 vignettes/*.pdf

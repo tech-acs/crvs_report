@@ -17,9 +17,9 @@ default:
   # To run particular tables, run their table_id (section_3: ["3_2","3_4"])
   tables_selected:
     section_3: [""]
-    section_4: ["4_2", "4_3"]
+    section_4:
     section_5: [""]
-    section_6: [""]
+    section_6: ["6_1"]
     section_7: [""]
     section_8: [""]
   
@@ -267,52 +267,117 @@ default:
       function_name: "create_t3.11_and_3.12"
       function_args: list()
     - table_id: 4_1
-      table_name: "Summary Table"
+      table_name: "Summary statistics on fertility by year of occurrence"
       function_name: "create_t4.1"
-      function_args: list()
+      function_args:
+        data: birth_data
+        est_data: birth_estimates
+        pops: pop_estimates
+        date_var: "dobyr"
+        tablename: "Table_4_1"
+        output_path: output_tables_path
     - table_id: 4_2
-      table_name: "Detailed Table"
+      table_name: "Live births by place of occurrence and sex of newborn"
       function_name: "create_t4.2"
       function_args:
         data: birth_data
-        date_var: birth1a
+        est_data: birth_estimates
+        date_var: "dobyr"
         data_year: 2020
         tablename: "Table_4_2"
         output_path: output_tables_path
     - table_id: 4_3
-      table_name: "Statistics Table"
+      table_name: "Live births by place of occurrence and place of usual residence of mother"
       function_name: "create_t4.3"
       function_args:
         data: birth_data
-        date_var: birth1a
-        data_year: 2022
+        date_var: dobyr
+        data_year: 2020
         tablename: "Table_4_3"
         output_path: output_tables_path
     - table_id: 4_4
-      table_name: "Statistics Table"
+      table_name: "Live births by age of mother and type of birth"
       function_name: "create_t4.4_to_4_6"
-      function_args: list()
+      function_args:
+        data: birth_data
+        data_year: 2020
+        by_var: "birth1g"
+        rural_urban: "no"
+        col_var: "fert_age_grp"
+        tablename: "Table_4_4"
+        output_path: output_tables_path
     - table_id: 4_5
-      table_name: "Statistics Table"
+      table_name: "Live births by age and marital status of mother, urban areas"
       function_name: "create_t4.4_to_4_6"
-      function_args: list()
+      function_args:
+        data: birth_data
+        data_year: 2020
+        by_var: "birth3c"
+        rural_urban: "Urban"
+        col_var: "fert_age_grp"
+        tablename: "Table_4_5"
+        output_path: output_tables_path
     - table_id: 4_6
-      table_name: "Statistics Table"
+      table_name: "Live births by age and marital status of mother, rural areas"
       function_name: "create_t4.4_to_4_6"
-      function_args: list()
+      function_args:
+        data: birth_data
+        data_year: 2020
+        by_var: "birth3c"
+        rural_urban: "Rural"
+        col_var: "fert_age_grp"
+        tablename: "Table_4_6"
+        output_path: output_tables_path
     - table_id: 4_7
-      table_name: "Statistics Table"
+      table_name: "Live births by place of occurrence, site of delivery and attendant at birth"
       function_name: "create_t4.7"
-      function_args: list()
+      function_args:
+        data: birth_data
+        date_var: "dobyr"
+        data_year: 2020
+        tablename: "Table_4_7"
+        output_path: output_tables_path
     - table_id: 4_8
-      table_name: "Statistics Table"
+      table_name: "Crude birth rate (CBR) by place of usual residence of mother"
       function_name: "create_t4.8"
-      function_args: list()
+      function_args:
+        data: birth_data
+        est_data: birth_estimates
+        pops: pop_estimates
+        date_var: "dobyr"
+        data_year: 2020
+        by_var: "birth1c"
+        tablename: "Table_4_8"
+        output_path: output_tables_path
     - table_id: 4_9
-      table_name: "Statistics Table"
+      table_name: "Age-specific fertility rates by usual residence of mother, urban areas"
       function_name: "create_table_4_9_and_4_10"
-      function_args: list()
+      function_args:
+        data: birth_data
+        est_data: birth_estimates
+        pops: pop_estimates
+        data_year: 2020
+        rural_urban: "Urban"
+        tablename: "Table_4_9"
+        output_path: output_tables_path
     - table_id: 4_10
-      table_name: "Statistics Table"
+      table_name: "Age-specific fertility rates by usual residence of mother, rural areas"
       function_name: "create_table_4_9_and_4_10"
-      function_args: list()
+      function_args:
+        data: birth_data
+        est_data: birth_estimates
+        pops: pop_estimates
+        data_year: 2020
+        rural_urban: "Rural"
+        tablename: "Table_4_10"
+        output_path: output_tables_path
+    - table_id: 6_1
+      table_name: "Leading causes of death by broad age group and sex"
+      function_name: "create_t6.1"
+      function_args:
+        data: death_data
+        cause: causes_dict
+        date_var: "dodyr"
+        data_year: 2022
+        tablename: "Table_6_1"
+        output_path: output_tables_path
