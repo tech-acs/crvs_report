@@ -19,7 +19,7 @@ default:
     section_3: [""]
     section_4:
     section_5: [""]
-    section_6: [""]
+    section_6: ["6_1"]
     section_7: [""]
     section_8: [""]
   
@@ -370,4 +370,14 @@ default:
         data_year: 2020
         rural_urban: "Rural"
         tablename: "Table_4_10"
+        output_path: output_tables_path
+    - table_id: 6_1
+      table_name: "Leading causes of death by broad age group and sex"
+      function_name: "create_t6.1"
+      function_args:
+        data: death_data
+        cause: causes_dict
+        date_var: "dodyr"
+        data_year: 2022
+        tablename: "Table_6_1"
         output_path: output_tables_path
