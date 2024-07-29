@@ -1,6 +1,8 @@
+# This script provides a pipeline to run with the test data in the package.
 library(yaml)
 library(crvsreportpackage)
 library(rlang)
+library(dplyr)
 
 # Load the configuration
 config <- yaml.load_file("./config/config.yml")
@@ -20,21 +22,66 @@ death_variables <- config$deaths_mapper
 marriage_variables <- config$marriage_mapper
 divorce_variables <- config$divorce_mapper
 
+#####################################
+###   AUXILIARY
+#####################################
+# Load auxiliary datasets
+birth_estimates <- read.csv("data/processed/created_birth_estim.csv")
+death_estimates <- read.csv("data/processed/created_death_estim.csv")
+pop_estimates <- read.csv("data/processed/created_population_estim.csv")
+causes_dict <- read.csv("data/processed/causes_dict.csv")
+
+# Add fertility age groups for the population data
+pop_estimates <- construct_age_group(pop_estimates, "age")
+
+# Add the total column for birth estimates
+birth_estimates <- birth_estimates %>%
+  mutate(total = male + female)
+# Add fertility age groups for the birth estimates
+birth_estimates <- construct_age_group(birth_estimates, "age")
+
+#####################################
+###   BIRTHS
+#####################################
 # Load the birth data
 birth_data <- read_sample_birth_data()
+
+# Add timeliness data
+birth_data <- construct_timeliness(birth_data)
+# Add dobyr
+birth_data <- construct_year(birth_data, date_col = "birth1a", year_col = "dobyr")
+# Add boryr
+birth_data <- construct_year(birth_data, date_col = "birth1a",  year_col = "doryr")
+# Add empty birth1j
+birth_data <- construct_empty_var(birth_data)
+# Add fertility age groups
+birth_data <- construct_age_group(birth_data, "birth3b")
+
+
+#####################################
+###   DEATHS
+#####################################
+
 # Load the death data
 death_data <- read_sample_death_data()
+# Add dobyr
+death_data <- construct_year(death_data, date_col = "death1a", year_col = "dodyr")
+# Add leading groups data
+death_data <- construct_leading_groups(death_data, age_col = 'death2b', age_group_col = "age_grp_lead")
+
+#####################################
+###   MARRIAGE AND DIVORCE
+#####################################
+
 # Load the marriage data
 marriage_data <- read_sample_marriage_data()
 # Load the death data
 divorce_data <- read_sample_divorce_data()
 
-
 ## HERE THERE SHOULD BE A FILTER OF THE DATA LOADED USING THE BIRTH VARIABLES
 ## HERE THERE SHOULD BE A VARIABLE RENAMING USING THE MAPPERS
 ## HERE THERE SHOULD BE SOME DATA VALIDATION, TO ENSURE DATA IS AS EXPECTED
 ## HERE THERE COULD BE SOME SUMMARY STATISTICS OR DATA CLEANING
-
 
 # Access tables configuration
 all_tables <- config$tables
@@ -63,7 +110,6 @@ for (sect_num in sectnumbs) {
     print(message)
   }
 }
-
 
 # Filter the tables in the config for the specified table_ids
 filtered_tables <- lapply(all_tables, function(table) {
