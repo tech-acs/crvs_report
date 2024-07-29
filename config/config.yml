@@ -281,8 +281,9 @@ default:
       function_name: "create_t4.2"
       function_args:
         data: birth_data
+        est_data: birth_estimates
         date_var: "dobyr"
-        data_year: 
+        data_year: 2020
         tablename: "Table_4_2"
         output_path: output_tables_path
     - table_id: 4_3
@@ -291,7 +292,7 @@ default:
       function_args:
         data: birth_data
         date_var: dobyr
-        data_year: 
+        data_year: 2020
         tablename: "Table_4_3"
         output_path: output_tables_path
     - table_id: 4_4
@@ -299,10 +300,10 @@ default:
       function_name: "create_t4.4_to_4_6"
       function_args:
         data: birth_data
-        data_year:
-        by_var:
-        rural_urban:
-        col_var:
+        data_year: 2020
+        by_var: "birth1g"
+        rural_urban: "no"
+        col_var: "fert_age_grp"
         tablename: "Table_4_4"
         output_path: output_tables_path
     - table_id: 4_5
@@ -310,10 +311,10 @@ default:
       function_name: "create_t4.4_to_4_6"
       function_args:
         data: birth_data
-        data_year:
+        data_year: 2020
         by_var: "birth3c"
-        rural_urban: "urban"
-        col_var:
+        rural_urban: "Urban"
+        col_var: "fert_age_grp"
         tablename: "Table_4_5"
         output_path: output_tables_path
     - table_id: 4_6
@@ -321,10 +322,10 @@ default:
       function_name: "create_t4.4_to_4_6"
       function_args:
         data: birth_data
-        data_year:
+        data_year: 2020
         by_var: "birth3c"
-        rural_urban: "rural"
-        col_var:
+        rural_urban: "Rural"
+        col_var: "fert_age_grp"
         tablename: "Table_4_6"
         output_path: output_tables_path
     - table_id: 4_7
@@ -333,7 +334,7 @@ default:
       function_args:
         data: birth_data
         date_var: "dobyr"
-        data_year:
+        data_year: 2020
         tablename: "Table_4_7"
         output_path: output_tables_path
     - table_id: 4_8
@@ -344,7 +345,7 @@ default:
         est_data: birth_estimates
         pops: pop_estimates
         date_var: "dobyr"
-        data_year:
+        data_year: 2020
         by_var: "birth1c"
         tablename: "Table_4_8"
         output_path: output_tables_path
@@ -355,8 +356,8 @@ default:
         data: birth_data
         est_data: birth_estimates
         pops: pop_estimates
-        data_year:
-        rural_urban: "urban"
+        data_year: 2020
+        rural_urban: "Urban"
         tablename: "Table_4_9"
         output_path: output_tables_path
     - table_id: 4_10
@@ -366,7 +367,7 @@ default:
         data: birth_data
         est_data: birth_estimates
         pops: pop_estimates
-        data_year:
-        rural_urban: "rural"
-        tablename: "Table_4_9"
+        data_year: 2020
+        rural_urban: "Rural"
+        tablename: "Table_4_10"
         output_path: output_tables_path

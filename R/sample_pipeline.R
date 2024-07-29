@@ -31,18 +31,27 @@ pop_estimates <- read.csv("data/processed/created_population_estim.csv")
 
 # Load the birth data
 birth_data <- read.csv("data/raw/created_birth_data.csv")
+#birth_data <- read_sample_birth_data()
 
 # Add timeliness data
 birth_data <- construct_timeliness(birth_data)
 # Add dobyr
 birth_data <- construct_year(birth_data, date_col = "birth1a", year_col = "dobyr")
 # Add boryr
-birth_data <- construct_year(birth_data, date_col = "birth1b",  year_col = "doryr")
+birth_data <- construct_year(birth_data, date_col = "birth1a",  year_col = "doryr")
 # Add empty birth1j
-birth_data <- add_na_column(birth_data)
+birth_data <- construct_empty_var(birth_data)
 # Add fertility age groups
-fertility_rates <- calculate_fertility_rates(birth_data, pop_estimates)
+birth_data <- construct_age_group(birth_data, "birth3b")
 
+# Add fertility age groups for the population data
+pop_estimates <- construct_age_group(pop_estimates, "age")
+
+# Add the total column for birth estimates
+birth_estimates <- birth_estimates %>%
+  mutate(total = male + female)
+# Add fertility age groups for the birth estimates
+birth_estimates <- construct_age_group(birth_estimates, "age")
 
 # Load the death data
 death_data <- read_sample_death_data()
@@ -96,8 +105,6 @@ filtered_tables <- lapply(all_tables, function(table) {
 
 # Remove NULL values from the filtered list
 filtered_tables <- Filter(Negate(is.null), filtered_tables)
-
-table_4_1 <- create_t4.1(birth_data, birth_estimates, pop_estimates, date_var = "dobyr", tablename = "Table_4_1")
 
 # Iterate over the filtered tables and call the respective functions
 for (table in filtered_tables) {
