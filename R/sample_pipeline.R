@@ -1,5 +1,4 @@
 # This script provides a pipeline to run with the test data in the package.
-
 library(yaml)
 library(crvsreportpackage)
 library(rlang)
@@ -23,15 +22,29 @@ death_variables <- config$deaths_mapper
 marriage_variables <- config$marriage_mapper
 divorce_variables <- config$divorce_mapper
 
-
-# Load the estimated data
+#####################################
+###   AUXILIARY
+#####################################
+# Load auxiliary datasets
 birth_estimates <- read.csv("data/processed/created_birth_estim.csv")
 death_estimates <- read.csv("data/processed/created_death_estim.csv")
 pop_estimates <- read.csv("data/processed/created_population_estim.csv")
+causes_dict <- read.csv("data/processed/causes_dict.csv")
 
+# Add fertility age groups for the population data
+pop_estimates <- construct_age_group(pop_estimates, "age")
+
+# Add the total column for birth estimates
+birth_estimates <- birth_estimates %>%
+  mutate(total = male + female)
+# Add fertility age groups for the birth estimates
+birth_estimates <- construct_age_group(birth_estimates, "age")
+
+#####################################
+###   BIRTHS
+#####################################
 # Load the birth data
-birth_data <- read.csv("data/raw/created_birth_data.csv")
-#birth_data <- read_sample_birth_data()
+birth_data <- read_sample_birth_data()
 
 # Add timeliness data
 birth_data <- construct_timeliness(birth_data)
@@ -44,17 +57,22 @@ birth_data <- construct_empty_var(birth_data)
 # Add fertility age groups
 birth_data <- construct_age_group(birth_data, "birth3b")
 
-# Add fertility age groups for the population data
-pop_estimates <- construct_age_group(pop_estimates, "age")
 
-# Add the total column for birth estimates
-birth_estimates <- birth_estimates %>%
-  mutate(total = male + female)
-# Add fertility age groups for the birth estimates
-birth_estimates <- construct_age_group(birth_estimates, "age")
+#####################################
+###   DEATHS
+#####################################
 
 # Load the death data
 death_data <- read_sample_death_data()
+# Add dobyr
+death_data <- construct_year(death_data, date_col = "death1a", year_col = "dodyr")
+# Add leading groups data
+death_data <- construct_leading_groups(death_data, age_col = 'death2b', age_group_col = "age_grp_lead")
+
+#####################################
+###   MARRIAGE AND DIVORCE
+#####################################
+
 # Load the marriage data
 marriage_data <- read_sample_marriage_data()
 # Load the death data
@@ -92,7 +110,6 @@ for (sect_num in sectnumbs) {
     print(message)
   }
 }
-
 
 # Filter the tables in the config for the specified table_ids
 filtered_tables <- lapply(all_tables, function(table) {
