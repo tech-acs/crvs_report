@@ -134,3 +134,7 @@ for (table in filtered_tables) {
     cat("Function", function_name, "not found!\n")
   }
 }
+
+# Convert all the .csv files into .xlsx files
+output_xls_tables_path <- paste(output_tables_path, "output.xlsx")
+convert_csv_xlsx(input_path = output_tables_path, output_path = output_xls_tables_path)
