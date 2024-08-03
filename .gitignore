@@ -22,16 +22,16 @@
 .Rproj.user/**
 
 # Working Data
-data/processed/*
-data/raw/*
+data/*
+data/*
 
 # Produced vignettes
 vignettes/*.html
 vignettes/*.pdf
 
 # Produced tables
-outputs/figures/*
-outputs/tables/*
+outputs/*
+outputs/*
 
 # OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
 .httr-oauth
@@ -59,6 +59,9 @@ Desktop.ini
 # Excel files
 *.xlsx
 *.xls
+
+# csv files
+*.csv
 
 # Temporary files
 *.tmp
