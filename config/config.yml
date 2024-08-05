@@ -229,39 +229,88 @@ default:
     - table_id: 3_2
       table_name: "Detailed Table"
       function_name: "create_t3.2_t3.3"
-      function_args: list()
+      function_args:
+        data: birth_data
+        occ_var: "dobyr"
+        topic: "births"
+        tablename: "Table_3_2"
     - table_id: 3_3
-      table_name: "Statistics Table"
+      table_name: "Detailed Table"
       function_name: "create_t3.2_t3.3"
-      function_args: list()
+      function_args:
+        data: death_data
+        occ_var: "dodyr"
+        topic: "deaths"
+        tablename: "Table_3_3"
     - table_id: 3_4
       table_name: "Statistics Table"
       function_name: "create_t3.4_and_3.6"
-      function_args: list()
+      function_args:
+        data: birth_data
+        est_data: birth_estimates
+        by_var: "dobyr"
+        topic: "births"
+        tablename: "Table_3_4"
     - table_id: 3_5
       table_name: "Statistics Table"
       function_name: "create_t3.5_and_3.7"
-      function_args: list()
+      function_args:
+        data: birth_data
+        est_data: birth_estimates
+        date_var: "dobyr"
+        data_year: 2020
+        topic: "births"
+        tablename: "Table_3_5"
     - table_id: 3_6
       table_name: "Statistics Table"
       function_name: "create_t3.4_and_3.6"
-      function_args: list()
+      function_args:
+        data: death_data
+        est_data: death_estimates
+        by_var: "dodyr"
+        topic: 
+        tablename: "Table_3_6"
     - table_id: 3_7
       table_name: "Statistics Table"
       function_name: "create_t3.5_and_3.7"
-      function_args: list()
+      function_args:
+        data: death_data
+        est_data: death_estimates
+        date_var: "dodyr"
+        data_year: 2020
+        topic: "deaths"
+        tablename: "Table_3_7"
     - table_id: 3_8
       table_name: "Statistics Table"
       function_name: "create_t3.8_and_t3.9"
-      function_args: list()
+      function_args:
+        data: birth_data
+        est_data: birth_estimates
+        date_var: "dobyr"
+        data_year: 2020
+        by_var: "birth1c"
+        topic: "births"
+        tablename: "Table_3_8"
     - table_id: 3_9
       table_name: "Statistics Table"
       function_name: "create_t3.8_and_t3.9"
-      function_args: list()
+      function_args:
+        data: death_data
+        est_data: death_estimates
+        date_var: "dodyr"
+        data_year: 2020
+        by_var: 
+        topic: "deaths"
+        tablename: "Table_3_9"
     - table_id: 3_10
       table_name: "Statistics Table"
       function_name: "create_t3.10"
-      function_args: list()
+      function_args:
+        data:
+        dth_est:
+        date_var:
+        data_year: 
+        tablename: "Table_3_10"
     - table_id: 3_11
       table_name: "Statistics Table"
       function_name: "create_t3.11_and_3.12"
@@ -375,6 +424,54 @@ default:
         rural_urban: "Rural"
         tablename: "Table_4_10"
         output_path: output_tables_path
+    - table_id: 5_1
+      table_name: "Summary Table"
+      function_name: "create_t5.1"
+      function_args: list()
+    - table_id: 5_2
+      table_name: "Detailed Table"
+      function_name: "create_t5.2"
+      function_args: list()
+    - table_id: 5_3
+      table_name: "Statistics Table"
+      function_name: "create_t5.3_and_t5.4"
+      function_args: list()
+    - table_id: 5_4
+      table_name: "Statistics Table"
+      function_name: "create_t5.3_and_t5.4"
+      function_args: list()
+    - table_id: 5_5
+      table_name: "Statistics Table"
+      function_name: "create_t5_5"
+      function_args: list()
+    - table_id: 5_6
+      table_name: "Statistics Table"
+      function_name: "create_t5.6_and_t5.7"
+      function_args: list()
+    - table_id: 5_7
+      table_name: "Statistics Table"
+      function_name: "create_t5.6_and_t5.7"
+      function_args: list()
+    - table_id: 5_8
+      table_name: "Statistics Table"
+      function_name: ""
+      function_args: list()
+    - table_id: 5_9
+      table_name: "Statistics Table"
+      function_name: ""
+      function_args: list()
+    - table_id: 5_10
+      table_name: "Statistics Table"
+      function_name: ""
+      function_args: list()
+    - table_id: 5_11
+      table_name: "Statistics Table"
+      function_name: "create_t5.11"
+      function_args: list()
+    - table_id: 5_12
+      table_name: "Statistics Table"
+      function_name: "create_t5.12"
+      function_args: list()
     - table_id: 6_1
       table_name: "Leading causes of death by broad age group and sex"
       function_name: "create_t6.1"
@@ -394,3 +491,60 @@ default:
         date_var: "dodyr"
         tablename: "Table_6_2"
         output_path: output_tables_path
+    - table_id: 7_1
+      table_name: "Summary Table"
+      function_name: "create_t5.1"
+      function_args: list()
+    - table_id: 7_2
+      table_name: "Detailed Table"
+      function_name: "create_t7.2_and_7.3"
+      function_args: list()
+    - table_id: 7_3
+      table_name: "Statistics Table"
+      function_name: "create_t7.2_and_7.3"
+      function_args: list()
+    - table_id: 7_4
+      table_name: "Statistics Table"
+      function_name: "create_table_7.4_and_7.5"
+      function_args: list()
+    - table_id: 7_5
+      table_name: "Statistics Table"
+      function_name: "create_table_7.4_and_7.5"
+      function_args: list()
+    - table_id: 7_6
+      table_name: "Statistics Table"
+      function_name: "create_t7.6_to_7.9"
+      function_args: list()
+    - table_id: 7_7
+      table_name: "Statistics Table"
+      function_name: "create_t7.6_to_7.9"
+      function_args: list()
+    - table_id: 7_8
+      table_name: "Statistics Table"
+      function_name: "create_t7.6_to_7.9"
+      function_args: list()
+    - table_id: 7_9
+      table_name: "Statistics Table"
+      function_name: "create_t7.6_to_7.9"
+      function_args: list()
+    - table_id: 8_1
+      table_name: "Summary Table"
+      function_name: "create_t8.1"
+      function_args: list()
+    - table_id: 8_2
+      table_name: "Detailed Table"
+      function_name: "create_t8.2"
+      function_args: list()
+    - table_id: 8_3
+      table_name: "Statistics Table"
+      function_name: ""
+      function_args: list()
+    - table_id: 8_4
+      table_name: "Statistics Table"
+      function_name: ""
+      function_args: list()
+    - table_id: 8_5
+      table_name: "Statistics Table"
+      function_name: ""
+      function_args: list()
+
