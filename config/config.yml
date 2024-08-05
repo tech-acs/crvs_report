@@ -539,7 +539,7 @@ default:
       table_name: "Statistics Table"
       function_name: ""
       function_args:
-      tablename: "Table_8_3"
+        tablename: "Table_8_3"
     - table_id: 8_4
       table_name: "Statistics Table"
       function_name: ""
@@ -547,5 +547,6 @@ default:
     - table_id: 8_5
       table_name: "Statistics Table"
       function_name: ""
-      function_args: list()
+      function_args:
+        tablename: "Table_8_4"
 
