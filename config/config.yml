@@ -538,7 +538,8 @@ default:
     - table_id: 8_3
       table_name: "Statistics Table"
       function_name: ""
-      function_args: list()
+      function_args:
+      tablename: "Table_8_3"
     - table_id: 8_4
       table_name: "Statistics Table"
       function_name: ""
