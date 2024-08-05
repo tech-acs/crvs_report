@@ -51,7 +51,7 @@ birth_data <- construct_timeliness(birth_data)
 # Add dobyr
 birth_data <- construct_year(birth_data, date_col = "birth1a", year_col = "dobyr")
 # Add boryr
-birth_data <- construct_year(birth_data, date_col = "birth1a",  year_col = "doryr")
+birth_data <- construct_year(birth_data, date_col = "birth1b",  year_col = "doryr")
 # Add empty birth1j
 birth_data <- construct_empty_var(birth_data)
 # Add fertility age groups
