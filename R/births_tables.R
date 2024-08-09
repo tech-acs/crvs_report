@@ -82,7 +82,7 @@ write.csv(table3.4, ("./outputs/partial_table3_4.csv"), row.names = FALSE)
 #Table3.11
 print("creating Table 3.11")
 agegrp <- births_data %>%
-  filter(registration_year == 2022) %>%
+  filter(registration_year == data_year) %>%
   group_by(agegroup_mother) %>%
   summarise(counts = n())
 
@@ -99,7 +99,8 @@ na_index <- agegrp$agegroup_mother == "Not Stated"
 total_na <- sum(agegrp$counts[na_index])
 
 table3.11 <- agegrp %>%
-  mutate(adjusted_total =  floor(counts + (proportion * total_na)))
+  mutate(adjusted_total =  floor(counts + (proportion * total_na))) %>%
+  arrange(desc(agegroup_mother == "under 15")) %>%
 
 rm(agegrp, output, output2)
 write.csv(table3.11, ("./outputs/table3_11.csv"), row.names = FALSE)
@@ -111,7 +112,7 @@ table4.1 <- births_data %>%
   group_by(registration_year, sex) %>%
   summarise(counts = n()) %>%
   pivot_wider(names_from = sex, values_from = counts, values_fill = 0) %>%
-  mutate(Total_Deaths = sum(Male, Female),
+  mutate(Total_Births = sum(Male, Female),
          Ratio = round(Male/Female*100, 0)) 
 
 pop <- pops_data %>%
@@ -119,12 +120,12 @@ pop <- pops_data %>%
   summarise(Total = sum(popn))
 
 table4.1 <- cbind(table4.1, pop) %>%
-  mutate(cbr = round((Total_Deaths/Total)*1000,2)) %>%
+  mutate(cbr = round((Total_Births/Total)*1000,2)) %>%
   select(-year, -Total) %>%
   pivot_longer(cols = -registration_year, names_to = "Category", values_to = "Value") %>%
   pivot_wider(names_from = registration_year, values_from = Value) %>%
   arrange(desc(Category == c("Male"))) %>%
-  arrange(desc(Category == c("Total_Deaths")))
+  arrange(desc(Category == c("Total_Births")))
 
   write.csv(table4.1, ("./outputs/partial_table4_1.csv"), row.names = FALSE)
 

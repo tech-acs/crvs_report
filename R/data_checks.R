@@ -26,7 +26,7 @@ al <- action_levels(
 agent <- births_data %>%
   create_agent(actions = al, label = "Births data quality report") %>%
   col_vals_between(mother_age_at_birth, left = 0, right = 115, na_pass = TRUE) %>%
-  col_vals_gte(registration_date, vars(date_of_birth), na_pass = TRUE) %>%
+  col_vals_gte(date_of_birth, vars(registration_date), na_pass = TRUE) %>%
   col_vals_not_null(date_of_birth) %>%
   col_vals_not_null(mother_age_at_birth) %>%
   interrogate()
@@ -39,7 +39,7 @@ rm(agent, al, bths_scan)
 
 
 dths_scan <- scan_data(deaths_data, "OV")
-export_report(bths_scan, "./data_reports/death_data_scan.html")
+export_report(dths_scan, "./data_reports/death_data_scan.html")
 
 
 #### Validation checks ####

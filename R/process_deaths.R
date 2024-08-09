@@ -1,19 +1,24 @@
-#Import deaths
-
+# Import deaths
+# This is where you put the paths to the raw data files
 
 print("Importing and processing Deaths")
-deaths_2019 <- read.csv("./data/raw/Death_2019.csv", na.strings = c("\\N","NA"), encoding = "latin1")
-deaths_2020 <- read.csv("./data/raw/Death_2020.csv", na.strings = c("\\N","NA"), encoding = "latin1")
-deaths_2021 <- read.csv("./data/raw/Death_2021.csv", na.strings = c("\\N","NA"), encoding = "latin1")
-deaths_2022 <- read.csv("./data/raw/Death_2022.csv", na.strings = c("\\N","NA"), encoding = "latin1")
+deaths_2019 <- read.csv("./data/raw/Death_2019.csv", na.strings = c("\\N", "NA", ""), encoding = "latin1")
+deaths_2020 <- read.csv("./data/raw/Death_2020.csv", na.strings = c("\\N", "NA", ""), encoding = "latin1")
+deaths_2021 <- read.csv("./data/raw/Death_2021.csv", na.strings = c("\\N", "NA", ""), encoding = "latin1")
+deaths_2022 <- read.csv("./data/raw/Death_2022.csv", na.strings = c("\\N", "NA", ""), encoding = "latin1")
 
 
+# This step appends the separate imported files into one large multi-year file
 deaths_data <- rbind(deaths_2019, deaths_2020, deaths_2021, deaths_2022)
+
+# This step removes the individual year files from the environment
 rm(deaths_2019, deaths_2020, deaths_2021, deaths_2022)
 
+
+# Removal of duplicates from the file
 deaths_data <- deaths_data[!duplicated(deaths_data),]
 
-
+# Process the deaths data
 deaths_data <- deaths_data %>%
   mutate(sex = str_to_sentence(sex),
          age_at_death = as.numeric(age_at_death),
@@ -65,5 +70,5 @@ deaths_data <- deaths_data %>%
                                                     "65-69", "70-74", "75-79", "80+"),
                                          right = F)))
 
-
+# Write the cleaned, processed, data to a new file in to the 'processed' folder
 fwrite(deaths_data, "./data/processed/deaths_data.csv")

@@ -1,8 +1,13 @@
 print("Importing and processing Births")
+
+# Import data
+# This is where you 
 births_data <- read.csv("./data/raw/Merged_Births_Jan2018_2024.csv", na.strings = c("\\N", "NA", ""))
 
+# Remove the duplicates from the file
 births_data <- births_data[!duplicated(births_data),]
 
+# Format dates to Date format and derive 'year' variables
 births_data <- births_data %>%
   mutate(date_of_birth = dmy(date_of_birth),
          registration_date = dmy(registration_date),
@@ -11,7 +16,7 @@ births_data <- births_data %>%
          registration_year = year(registration_date),
          notification_year = year(notification_date))
 
-
+# Derive necessary variables
 births_data <- births_data %>%
   mutate(mother_age_at_birth = as.numeric(mother_age_at_birth),
          sex = str_to_sentence(sex), 
@@ -35,8 +40,10 @@ births_data <- births_data %>%
            delay > 100 ~ "Delayed",
            TRUE ~ "check"))
 
+# Clean character variables: set title case and clean white space
 births_data <- births_data %>%
   mutate(across(where(is.character), ~ str_to_title(.)), 
          across(where(is.character), ~ str_squish(.)))       
 
+# Write cleaned and processed data to a new file in the 'processed' folder
 fwrite(births_data, "./data/processed/births_data.csv")

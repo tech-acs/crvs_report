@@ -1,3 +1,5 @@
+# This code reads in the cleaned, and processed, data into the R environment
+
 print("Reading in Deaths")
 deaths_data <- read.csv("./data/processed/deaths_data.csv", na.strings = c("\\N", "NA", ""))
 print("Reading in Births")
