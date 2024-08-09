@@ -24,6 +24,23 @@
 # Working Data
 data/processed/*
 data/raw/*
+outputs/*
+
+# any .csv or .xlxs or .xls files
+*.csv
+*.CSV
+*.xls
+*.XLS
+*.xlsx
+*.XLSX
+# Stata/SAS/SPSS data files
+*.sav
+*.SAV
+*.dta
+*.DTA
+*.sas7bdat
+*.xpt
+*.XPT
 
 # Produced vignettes
 vignettes/*.html
