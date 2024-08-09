@@ -41,6 +41,15 @@ outputs/*
 *.sas7bdat
 *.xpt
 *.XPT
+# Further potential outputs
+*.jpg
+*.JPG
+*.jpeg
+*.JPEG
+*.png
+*.PNG
+*.html
+*.HTML
 
 # Produced vignettes
 vignettes/*.html
