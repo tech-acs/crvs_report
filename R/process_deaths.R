@@ -18,7 +18,7 @@ rm(deaths_2019, deaths_2020, deaths_2021, deaths_2022)
 # Removal of duplicates from the file
 deaths_data <- deaths_data[!duplicated(deaths_data),]
 
-# Process the deaths data
+# Process the deaths data
 deaths_data <- deaths_data %>%
   mutate(sex = str_to_sentence(sex),
          age_at_death = as.numeric(age_at_death),
@@ -40,10 +40,14 @@ deaths_data <- deaths_data %>%
            residence_district != occurrence_district ~ "other location",
            is.na(residence_district) ~ "Not stated", 
            is.na(occurrence_district) ~ "Not stated"),
-         age_grp_lead = as.character(cut(age_at_death, 
+         age_grp_lead = as.character(cut(as.numeric(age_at_death), 
                                          breaks = c(0, 5, 15, 70, Inf),
                                          right = F,
                                          labels = c("<5", "5-14", "15-69", "70+"))),
+         age_group_wide = as.character(cut(as.numeric(age_at_death), 
+                                       breaks = c(0, 5, 25, 75, Inf),
+                                       right = FALSE, 
+                                       labels = c("0–4", "5–24", "25–74", "75+"))),
          timeliness = case_when(
            delay %in% c(0:29) ~ "Current",
            delay %in% c(30:100) ~ "Late", 
@@ -55,7 +59,6 @@ deaths_data <- deaths_data %>%
            age_in_days < 8 ~ "early neonatal",
            age_in_days %in% (8:28) ~ "late neonatal",
            TRUE ~ NA),
-         under5_deaths = ifelse(age_at_death < 5, 1, NA),
          age_group_80 = as.character(cut(as.numeric(age_at_death), 
                                          breaks = c(0, 1, seq(5, 80, 5), Inf), 
                                          labels = c("<1", "01-04", "05-09", "10-14", "15-19", "20-24", "25-29", 

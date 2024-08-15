@@ -1,5 +1,8 @@
 # Read in raw data
-births_data <- read.csv("./data/raw/Merged_Births_Jan2018_2024.csv", na.strings = c("\\N", "NA", ""))
+births_data <- read.csv("./data/raw/Merged_Births_Jan2018_2024.csv", na.strings = c("\\N", "NA", "")) %>%
+  mutate(date_of_birth = dmy(date_of_birth),
+         registration_date = dmy(registration_date),
+         notification_date = dmy(notification_date))
 
 deaths_2019 <- read.csv("./data/raw/Death_2019.csv", na.strings = c("\\N","NA"), encoding = "latin1")
 deaths_2020 <- read.csv("./data/raw/Death_2020.csv", na.strings = c("\\N","NA"), encoding = "latin1")
@@ -25,10 +28,17 @@ al <- action_levels(
 
 agent <- births_data %>%
   create_agent(actions = al, label = "Births data quality report") %>%
-  col_vals_between(mother_age_at_birth, left = 0, right = 115, na_pass = TRUE) %>%
-  col_vals_gte(date_of_birth, vars(registration_date), na_pass = TRUE) %>%
+  col_vals_not_between(mother_age_at_birth, left = 0, right = 115, na_pass = TRUE) %>%
+  col_vals_gte(registration_date, vars(date_of_birth), na_pass = TRUE) %>%
   col_vals_not_null(date_of_birth) %>%
   col_vals_not_null(mother_age_at_birth) %>%
+  col_vals_in_set(sex, set = c("Male","Female")) %>%
+  col_vals_not_null(birth_district) %>%
+  col_vals_not_null(birth_county) %>%
+  col_vals_not_null(birth_subcounty) %>%
+  col_vals_not_null(birth_village, actions = c(warn_on_fail(warn_at = 0.07), stop_on_fail(stop_at = 0.2))) %>%
+  col_vals_not_null(birth_facility) %>%
+  col_vals_not_between(weight_at_birth, left = 230, right = 4000, na_pass = FALSE) %>%
   interrogate()
 
 #### Export reports ####
@@ -49,15 +59,16 @@ al <- action_levels(
   stop_at = 0.1
 )
 
+# Below are the validation rules for daeths data.
 agent <- deaths_data %>%
   create_agent(actions = al, label = "Deaths data quality report") %>%
   col_vals_between(age_at_death, left = 0, right = 115, na_pass = TRUE) %>%
   col_vals_gte(date_of_registration, vars(date_of_death), na_pass = TRUE) %>%
   col_vals_gte(date_of_death, vars(date_of_birth), na_pass = TRUE) %>%
+  col_vals_gte(date_of_registration, vars(date_of_notification), na.pass = TRUE) %>%
   col_vals_not_null(date_of_birth) %>%
   col_vals_not_null(age_at_death) %>%
   interrogate()
-
 
 #### Export reports ####
 export_report(agent, "./data_reports/death_data_report.html")

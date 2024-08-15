@@ -48,8 +48,8 @@ outputs/*
 *.JPEG
 *.png
 *.PNG
-*.html
-*.HTML
+*.Rmd
+*.rmd
 
 # Produced vignettes
 vignettes/*.html
@@ -58,6 +58,9 @@ vignettes/*.pdf
 # Produced tables
 outputs/figures/*
 outputs/tables/*
+
+# Data reports
+data_reports/
 
 # OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
 .httr-oauth

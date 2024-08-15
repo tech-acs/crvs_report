@@ -1,7 +1,7 @@
 print("Importing and processing Births")
 
 # Import data
-# This is where you 
+# This is where you 
 births_data <- read.csv("./data/raw/Merged_Births_Jan2018_2024.csv", na.strings = c("\\N", "NA", ""))
 
 # Remove the duplicates from the file
@@ -40,7 +40,7 @@ births_data <- births_data %>%
            delay > 100 ~ "Delayed",
            TRUE ~ "check"))
 
-# Clean character variables: set title case and clean white space
+# Clean character variables: set title case and clean white space
 births_data <- births_data %>%
   mutate(across(where(is.character), ~ str_to_title(.)), 
          across(where(is.character), ~ str_squish(.)))       

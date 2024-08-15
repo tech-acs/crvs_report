@@ -90,17 +90,18 @@ all_out = sum(agegrp$counts)
 
 agegrp <- agegrp %>%
   mutate(total_count = all_out) %>%
-  mutate(proportion = round((counts/total_count), 2)) %>%
+  mutate(proportion = counts/total_count*100) %>%
   select(-total_count) %>%
-  arrange(desc(agegroup_mother == "under 15")) %>%
-  adorn_totals("row", name = "Grand total")
+  arrange(desc(agegroup_mother == "Under 15")) %>%
+  adorn_totals("row", name = "Grand total") %>%
+  mutate(proportion = round(proportion, 0))
 
 na_index <- agegrp$agegroup_mother == "Not Stated"
 total_na <- sum(agegrp$counts[na_index])
 
 table3.11 <- agegrp %>%
-  mutate(adjusted_total =  floor(counts + (proportion * total_na))) %>%
-  arrange(desc(agegroup_mother == "under 15")) %>%
+  mutate(adjusted_total =  floor(counts + (total_na/100 *proportion ))) %>%
+  arrange(desc(agegroup_mother == "Under 15")) 
 
 rm(agegrp, output, output2)
 write.csv(table3.11, ("./outputs/table3_11.csv"), row.names = FALSE)
