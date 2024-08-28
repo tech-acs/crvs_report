@@ -11,7 +11,7 @@
 
 
 
-<title>Cleaning</title>
+<title>creating_simple_tables</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -348,107 +348,34 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">Cleaning</h1>
+<h1 class="title toc-ignore">creating_simple_tables</h1>
 
 </div>
 
 
-<div id="dealing-with-duplicates" class="section level4">
-<h4>Dealing with duplicates</h4>
-<p>In systems that use large amounts of data there is always the risk of
-duplicate records. With R it is very easy to handle this. If you have a
-variable that is a unique identifier it is a good idea to use that</p>
-<p>The following code effectively creates a new version of ‘births_data’
-where the id_variable is not duplicated</p>
-<pre class="r"><code>births_data &lt;- births_data[!duplicated(births_data$id_variable),]</code></pre>
-<p>if you do not have an id variable R can check entire rows</p>
-<pre class="r"><code>births_data &lt;- births_data[!duplicated(births_data),]</code></pre>
+<p>Creating a simple frequency table is a very easy task in R, once the
+data has been put into the necessary structure. Most tables can be
+created with 3 or 4 lines of code and they nearly all follow the same
+format.</p>
+<hr />
+<div id="filter" class="section level4">
+<h4><code>filter()</code></h4>
 <hr />
 </div>
-<div id="names-of-variables-clean-and-rename" class="section level4">
-<h4>names of variables (clean and rename)</h4>
-<p>Having all variable names in a similar convention will make writing
-code much easier. Having columns(variables) with descriptive names also
-helps the readability of the code. ‘dobm’ might be nice and concise, but
-ambiguous if you don’t already know the data. ‘mother_date_of_birth’ is
-very clear.</p>
-<p>Spaces in names, whilst allowed, are not a very good idea. A naming
-convention called ‘snake case’ is a common way to keep words separated
-in names as it uses underscores instead of spaces.</p>
-<p>“mother_date_of_birth’ is an example of snake case.</p>
-<p>A package called ‘janitor’ has a function called ‘clean_names()’
-which will do it’s best to set the column names in a data frame to a
-specified case convention, it’s default is snake case.</p>
-<pre class="r"><code>#clean the column names to make consistent
-marriages_data &lt;- clean_names(marriages_data)</code></pre>
-<p>Some times you may need to rename columns in a data frame, this can
-easily be done in R using the <code>rename()</code> function.</p>
-<p>In this example we are renaming ‘gender’ to ‘sex’ and ‘placeof_birth’
-to ‘place_of_birth’. The new name comes before the = sign.</p>
-<pre class="r"><code>births_data &lt;- births_data %&gt;%
-  rename(sex = gender, 
-         place_of_birth = placeof_birth)</code></pre>
+<div id="group_by" class="section level4">
+<h4><code>group_by()</code></h4>
 <hr />
 </div>
-<div id="cleaning-text-values" class="section level4">
-<h4>Cleaning text values</h4>
-<p>As registration data can be input by different people some times the
-values in the same column may get a bit untidy. For example you may have
-a ‘sex’ variable with values of:</p>
-<p>‘male’ ‘female’ ‘Male’ ‘Female’ ‘MALE’ ‘FEMALE’</p>
-<p>These are all distinct values and R will treat them as such. Again
-dealing with such things is easy in R. The package ‘stringr’ contains
-several functions to deal with formatting of strings (text values)</p>
-<p>This code would take the previous example of ‘sex’ and format every
-value to ‘Male’ or ‘Female’</p>
-<pre class="r"><code>births_data &lt;- births_data %&gt;%
-  mutate(sex = str_to_sentence(sex))</code></pre>
-<p>This code will apply the <code>str_to_title()</code> function to all
-character type columns in a data frame.</p>
-<pre class="r"><code>births_data &lt;- births_data %&gt;%
-  mutate(across(where(is.character), ~ str_to_title(.)))</code></pre>
-<p>e.g. a column containing names of hospitals may have values like:</p>
-<p>‘BALAKA DISTRICT HOSPITAL’</p>
-<p>‘BALAKA district hospital’</p>
-<p>The above code would change them all to:</p>
-<p>‘Balaka District Hospital’</p>
-<hr />
-<p><code>str_squish</code></p>
-<p>You may also find that strings have unecessary spaces in. e.g.</p>
-<p>’ Balaka District Hospital ’</p>
-<pre class="r"><code>births_data &lt;- births_data %&gt;%
-  mutate(across(where(is.character), ~ str_squish(.)))</code></pre>
-<p>The function <code>str_squish()</code> would remove the leading and
-trailing spaces, as well as correcting multiple spaces to 1.</p>
-<p>The result would be: ‘Balaka District Hospital’</p>
-<p>Checking columns(Variables) are the correct type near the beginning
-of the process is also a good idea. Some operations are type specific.
-You cannot perform mathematical operations on character types, even if
-the actual values appear to be numbers.</p>
+<div id="summarise" class="section level4">
+<h4><code>summarise()</code></h4>
 <hr />
 </div>
-<div id="removing-unwanted-punctuation-and-symbols" class="section level4">
-<h4>Removing unwanted punctuation and symbols</h4>
-<p>Sometimes in the data there can be unwanted punctuation or
-symbols.</p>
-<p>An example may be a string of text with a comma in. The comma can
-cause issues if the output is saved to a CSV file, which in turn is
-imported to another system.</p>
-<p>You could remove these characters from columns individually like
-this: The following examples will remove <code>.</code>, <code>,</code>,
-<code>+</code> from the data:</p>
-<pre class="r"><code>deaths_data &lt;- deaths_data %&gt;%
-  mutate(final_code = gsub(&quot;\\.|\\+|\\,&quot;, &quot;&quot;, final_code)))</code></pre>
-<p>Or you could apply it to any column that contained the word ‘code’ in
-it’s name:</p>
-<pre class="r"><code>deaths_data &lt;- deaths_data %&gt;%
-  mutate(across(contains(&quot;code&quot;), ~  gsub(&quot;\\.|\\+|\\,&quot;, &quot;&quot;, .)))</code></pre>
-<p>Or even apply it to all character type variables:</p>
-<pre class="r"><code>deaths_data &lt;- deaths_data %&gt;%
-  mutate(across(where(is.character), ~  gsub(&quot;\\.|\\+|\\,&quot;, &quot;&quot;, .)))</code></pre>
-<div id="back-to-overview" class="section level5">
-<h5><a href="overview_of_workshop.html"> back to overview</a></h5>
+<div id="pivot_wider" class="section level4">
+<h4><code>pivot_wider()</code></h4>
+<hr />
 </div>
+<div id="select" class="section level4">
+<h4><code>select()</code></h4>
 </div>
 
 

@@ -11,7 +11,7 @@
 
 
 
-<title>Cleaning</title>
+<title>Deriving</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -348,104 +348,139 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">Cleaning</h1>
+<h1 class="title toc-ignore">Deriving</h1>
 
 </div>
 
 
-<div id="dealing-with-duplicates" class="section level4">
-<h4>Dealing with duplicates</h4>
-<p>In systems that use large amounts of data there is always the risk of
-duplicate records. With R it is very easy to handle this. If you have a
-variable that is a unique identifier it is a good idea to use that</p>
-<p>The following code effectively creates a new version of ‘births_data’
-where the id_variable is not duplicated</p>
-<pre class="r"><code>births_data &lt;- births_data[!duplicated(births_data$id_variable),]</code></pre>
-<p>if you do not have an id variable R can check entire rows</p>
-<pre class="r"><code>births_data &lt;- births_data[!duplicated(births_data),]</code></pre>
-<hr />
+<style>
+pre code {
+white-space: pre;
+overflow-x: auto;
+}
+</style>
+<div id="deriving-variables" class="section level2">
+<h2>Deriving variables</h2>
+<p>Generally not all the variables you need for analysis are available
+in the source data, such as age groups. These can be derived in a couple
+of different ways in R.</p>
+<p>You can create a new varaible with a fixed value very easily:</p>
+<pre class="r"><code>birth$registration_year &lt;- 2020</code></pre>
+<p>But deriving variables uses information already contained in the
+data. This needs a bit more code.</p>
+<p>Using <code>ifelse()</code> statement</p>
+<p>These are useful when there are only one or two conditions being
+used:</p>
+<pre class="r"><code>births$mother_birth_year &lt;- ifelse(!births$mother_age_at_birth %in% c(10:60), NA, births$mother_age_at_birth)</code></pre>
+<p>But they can get unwieldy pretty quickly:</p>
+<pre class="r"><code>dths1$agegroup &lt;- ifelse (dths1$age_at_death == 0, &quot;Under 1&quot;,
+                    ifelse (dths1$age_at_death &gt;= 1 &amp; dths1$age_at_death &lt;= 4, &quot;01-04&quot;,
+                            ifelse (dths1$age_at_death &gt;= 5 &amp; dths1$age_at_death &lt;= 9, &quot;05-09&quot;,
+                                    ifelse (dths1$age_at_death &gt;= 10 &amp; dths1$age_at_death &lt;= 14, &quot;10-14&quot;,
+                                            ifelse (dths1$age_at_death &gt;= 15 &amp; dths1$age_at_death &lt;= 19, &quot;15-19&quot;,
+                                                    ifelse (dths1$age_at_death &gt;= 20 &amp; dths1$age_at_death &lt;= 24, &quot;20-24&quot;,
+                                                            ifelse (dths1$age_at_death &gt;= 25 &amp; dths1$age_at_death &lt;= 29, &quot;25-29&quot;,
+                                                                    ifelse (dths1$age_at_death &gt;= 30 &amp; dths1$age_at_death &lt;= 34, &quot;30-34&quot;,
+                                                                            ifelse (dths1$age_at_death &gt;= 35 &amp; dths1$age_at_death &lt;= 39, &quot;35-39&quot;,
+                                                                                    ifelse (dths1$age_at_death &gt;= 40 &amp; dths1$age_at_death &lt;= 44, &quot;40-44&quot;,
+                                                                                            ifelse (dths1$age_at_death &gt;= 45 &amp; dths1$age_at_death &lt;= 49, &quot;45-49&quot;,
+                                                                                                    ifelse (dths1$age_at_death &gt;= 50 &amp; dths1$age_at_death &lt;= 54, &quot;50-54&quot;,
+                                                                                                            ifelse (dths1$age_at_death &gt;= 55 &amp; dths1$age_at_death &lt;= 59, &quot;55-59&quot;,
+                                                                                                                    ifelse (dths1$age_at_death &gt;= 60 &amp; dths1$age_at_death &lt;= 64, &quot;60-64&quot;,
+                                                                                                                            ifelse (dths1$age_at_death &gt;= 65 &amp; dths1$age_at_death &lt;= 69, &quot;65-69&quot;,
+                                                                                                                                    ifelse (dths1$age_at_death &gt;= 70 &amp; dths1$age_at_death &lt;= 74, &quot;70-74&quot;,
+                                                                                                                                            ifelse (dths1$age_at_death &gt;= 75 &amp; dths1$age_at_death &lt;= 79, &quot;75-79&quot;,
+                                                                                                                                                    ifelse (dths1$age_at_death &gt;= 80 &amp; dths1$age_at_death &lt;= 84, &quot;80-84&quot;,
+                                                                                                                                                            ifelse (dths1$age_at_death &gt;= 85 &amp; dths1$age_at_death &lt;= 89, &quot;85-89&quot;,
+                                                                                                                                                                    ifelse (dths1$age_at_death &gt;= 90 , &quot;90+&quot;, &quot;&quot;))))))))))))))))))))</code></pre>
+<div id="mutate" class="section level5">
+<h5><code>mutate()</code></h5>
 </div>
-<div id="names-of-variables-clean-and-rename" class="section level4">
-<h4>names of variables (clean and rename)</h4>
-<p>Having all variable names in a similar convention will make writing
-code much easier. Having columns(variables) with descriptive names also
-helps the readability of the code. ‘dobm’ might be nice and concise, but
-ambiguous if you don’t already know the data. ‘mother_date_of_birth’ is
-very clear.</p>
-<p>Spaces in names, whilst allowed, are not a very good idea. A naming
-convention called ‘snake case’ is a common way to keep words separated
-in names as it uses underscores instead of spaces.</p>
-<p>“mother_date_of_birth’ is an example of snake case.</p>
-<p>A package called ‘janitor’ has a function called ‘clean_names()’
-which will do it’s best to set the column names in a data frame to a
-specified case convention, it’s default is snake case.</p>
-<pre class="r"><code>#clean the column names to make consistent
-marriages_data &lt;- clean_names(marriages_data)</code></pre>
-<p>Some times you may need to rename columns in a data frame, this can
-easily be done in R using the <code>rename()</code> function.</p>
-<p>In this example we are renaming ‘gender’ to ‘sex’ and ‘placeof_birth’
-to ‘place_of_birth’. The new name comes before the = sign.</p>
-<pre class="r"><code>births_data &lt;- births_data %&gt;%
-  rename(sex = gender, 
-         place_of_birth = placeof_birth)</code></pre>
-<hr />
+<div id="case_when-statement" class="section level5">
+<h5><code>case_when()</code> statement</h5>
+<p>The ‘case_when()’ function works the same was as ‘case’ in sql, the
+STATA equivilent is (‘gen’ and ‘replace’). It says that when the values
+meet a case, then the new variable is given a certain value.</p>
+<pre class="r"><code>dths &lt;- dths %&gt;%
+  mutate(agegroup = case_when(age_at_death == 0 ~ &quot;Under 1&quot;,
+                              age_at_death &gt;= 1 &amp; age_at_death &lt;= 4 ~ &quot;01-04&quot;,
+                              age_at_death &gt;= 5 &amp; age_at_death &lt;= 9 ~ &quot;05-09&quot;,
+                              age_at_death &gt;= 10 &amp; age_at_death &lt;= 14 ~ &quot;10-14&quot;,
+                              age_at_death &gt;= 15 &amp; age_at_death &lt;= 19 ~ &quot;15-19&quot;,
+                              age_at_death &gt;= 20 &amp; age_at_death &lt;= 24 ~ &quot;20-24&quot;,
+                              age_at_death &gt;= 25 &amp; age_at_death &lt;= 29 ~ &quot;25-29&quot;,
+                              age_at_death &gt;= 30 &amp; age_at_death &lt;= 34 ~ &quot;30-34&quot;,
+                              age_at_death &gt;= 35 &amp; age_at_death &lt;= 39 ~ &quot;35-39&quot;,
+                              age_at_death &gt;= 40 &amp; age_at_death &lt;= 44 ~ &quot;40-44&quot;,
+                              age_at_death &gt;= 45 &amp; age_at_death &lt;= 49 ~ &quot;45-49&quot;,
+                              age_at_death &gt;= 50 &amp; age_at_death &lt;= 54 ~ &quot;50-54&quot;,
+                              age_at_death &gt;= 55 &amp; age_at_death &lt;= 59 ~ &quot;55-59&quot;,
+                              age_at_death &gt;= 60 &amp; age_at_death &lt;= 64 ~ &quot;60-64&quot;,
+                              age_at_death &gt;= 65 &amp; age_at_death &lt;= 69 ~ &quot;65-69&quot;,
+                              age_at_death &gt;= 70 &amp; age_at_death &lt;= 74 ~ &quot;70-74&quot;,
+                              age_at_death &gt;= 75 &amp; age_at_death &lt;= 79 ~ &quot;75-79&quot;,
+                              age_at_death &gt;= 80 &amp; age_at_death &lt;= 84 ~ &quot;80-84&quot;,
+                              age_at_death &gt;= 85 &amp; age_at_death &lt;= 89 ~ &quot;85-89&quot;,
+                              age_at_death &gt;= 90 ~ &quot;90+&quot;,
+                              TRUE ~ &quot;&quot;))
+</code></pre>
 </div>
-<div id="cleaning-text-values" class="section level4">
-<h4>Cleaning text values</h4>
-<p>As registration data can be input by different people some times the
-values in the same column may get a bit untidy. For example you may have
-a ‘sex’ variable with values of:</p>
-<p>‘male’ ‘female’ ‘Male’ ‘Female’ ‘MALE’ ‘FEMALE’</p>
-<p>These are all distinct values and R will treat them as such. Again
-dealing with such things is easy in R. The package ‘stringr’ contains
-several functions to deal with formatting of strings (text values)</p>
-<p>This code would take the previous example of ‘sex’ and format every
-value to ‘Male’ or ‘Female’</p>
-<pre class="r"><code>births_data &lt;- births_data %&gt;%
-  mutate(sex = str_to_sentence(sex))</code></pre>
-<p>This code will apply the <code>str_to_title()</code> function to all
-character type columns in a data frame.</p>
-<pre class="r"><code>births_data &lt;- births_data %&gt;%
-  mutate(across(where(is.character), ~ str_to_title(.)))</code></pre>
-<p>e.g. a column containing names of hospitals may have values like:</p>
-<p>‘BALAKA DISTRICT HOSPITAL’</p>
-<p>‘BALAKA district hospital’</p>
-<p>The above code would change them all to:</p>
-<p>‘Balaka District Hospital’</p>
-<hr />
-<p><code>str_squish</code></p>
-<p>You may also find that strings have unecessary spaces in. e.g.</p>
-<p>’ Balaka District Hospital ’</p>
-<pre class="r"><code>births_data &lt;- births_data %&gt;%
-  mutate(across(where(is.character), ~ str_squish(.)))</code></pre>
-<p>The function <code>str_squish()</code> would remove the leading and
-trailing spaces, as well as correcting multiple spaces to 1.</p>
-<p>The result would be: ‘Balaka District Hospital’</p>
-<p>Checking columns(Variables) are the correct type near the beginning
-of the process is also a good idea. Some operations are type specific.
-You cannot perform mathematical operations on character types, even if
-the actual values appear to be numbers.</p>
-<hr />
+<div id="in" class="section level5">
+<h5><code>%in%</code></h5>
+<p><code>%in%</code> basically says look in the variable and if the
+value falls in the range set by the combined list
+e.g.<code>c(1:4)</code>. Then the new variable will have a certain
+value.</p>
+<pre class="r"><code>  dths &lt;- dths %&gt;%
+  mutate(agegroup = case_when(age_at_death %in% c(0) ~ &quot;Under 1&quot;,
+                              age_at_death %in% c(1:4) ~ &quot;01-04&quot;,
+                              age_at_death %in% c(5:9) ~ &quot;05-09&quot;,
+                              age_at_death %in% c(10:14) ~ &quot;10-14&quot;,
+                              age_at_death %in% c(15:19) ~ &quot;15-19&quot;,
+                              age_at_death %in% c(20:24) ~ &quot;20-24&quot;,
+                              age_at_death %in% c(25:29) ~ &quot;25-29&quot;,
+                              age_at_death %in% c(30:34) ~ &quot;30-34&quot;,
+                              age_at_death %in% c(35:39) ~ &quot;35-39&quot;,
+                              age_at_death %in% c(40:44) ~ &quot;40-44&quot;,
+                              age_at_death %in% c(45:49) ~ &quot;45-49&quot;,
+                              age_at_death %in% c(50:54) ~ &quot;50-54&quot;,
+                              age_at_death %in% c(55:59) ~ &quot;55-59&quot;,
+                              age_at_death %in% c(60:64) ~ &quot;60-64&quot;,
+                              age_at_death %in% c(65:69) ~ &quot;65-69&quot;,
+                              age_at_death %in% c(70:74) ~ &quot;70-74&quot;,
+                              age_at_death %in% c(75:79) ~ &quot;75-79&quot;,
+                              age_at_death %in% c(80:84) ~ &quot;80-84&quot;,
+                              age_at_death %in% c(85:89) ~ &quot;85-89&quot;,
+                              age_at_death %in% c(90) ~ &quot;90+&quot;,
+                              TRUE) ~ &quot;&quot;))</code></pre>
 </div>
-<div id="removing-unwanted-punctuation-and-symbols" class="section level4">
-<h4>Removing unwanted punctuation and symbols</h4>
-<p>Sometimes in the data there can be unwanted punctuation or
-symbols.</p>
-<p>An example may be a string of text with a comma in. The comma can
-cause issues if the output is saved to a CSV file, which in turn is
-imported to another system.</p>
-<p>You could remove these characters from columns individually like
-this: The following examples will remove <code>.</code>, <code>,</code>,
-<code>+</code> from the data:</p>
-<pre class="r"><code>deaths_data &lt;- deaths_data %&gt;%
-  mutate(final_code = gsub(&quot;\\.|\\+|\\,&quot;, &quot;&quot;, final_code)))</code></pre>
-<p>Or you could apply it to any column that contained the word ‘code’ in
-it’s name:</p>
-<pre class="r"><code>deaths_data &lt;- deaths_data %&gt;%
-  mutate(across(contains(&quot;code&quot;), ~  gsub(&quot;\\.|\\+|\\,&quot;, &quot;&quot;, .)))</code></pre>
-<p>Or even apply it to all character type variables:</p>
-<pre class="r"><code>deaths_data &lt;- deaths_data %&gt;%
-  mutate(across(where(is.character), ~  gsub(&quot;\\.|\\+|\\,&quot;, &quot;&quot;, .)))</code></pre>
+<div id="cut-breaks-statement" class="section level5">
+<h5><code>cut()</code> &amp; <code>breaks()</code> statement</h5>
+<p>This is a much more compact piece of code, but it a little more
+difficult to understand.</p>
+<pre class="r"><code>  dths &lt;- dths %&gt;%
+           agegroup = as.character(cut(as.numeric(age_at_death), 
+                                         breaks = c(0, 1, seq(5, 90, 5), Inf), 
+                                         labels = c(&quot;Under 1&quot;, &quot;01-04&quot;, &quot;05-09&quot;, &quot;10-14&quot;, &quot;15-19&quot;,
+                                         &quot;20-24&quot;, &quot;25-29&quot;, &quot;30-34&quot;, &quot;35-39&quot;, &quot;40-44&quot;, &quot;45-49&quot;,
+                                         &quot;50-54&quot;, &quot;55-59&quot;, &quot;60-64&quot;, &quot;65-69&quot;, &quot;70-74&quot;, &quot;75-79&quot;,
+                                         &quot;80-84&quot;, &quot;85-89&quot;, &quot;90+&quot;)))</code></pre>
+<p>What this code is actually doing:</p>
+<p><b>Convert</b> age_at_death to Numeric:</p>
+<p>The code first converts the age_at_death column to a numeric value
+using <code>as.numeric(age_at_death)</code>.</p>
+<p>This assumes that age_at_death is currently not numeric (perhaps it
+is a character or factor).</p>
+<p><b>Create Age Groups</b>:</p>
+<p>The cut function is then used to group these numeric ages into
+specified age bands (e.g., “Under 1”, “01-04”, “05-09”, etc.). The
+breaks parameter defines the boundaries of these age groups, and the
+labels parameter assigns labels to each group.</p>
+<p><b>Convert to Character</b>:</p>
+<p>Finally, the <code>as.character()</code> function converts the result
+of <code>cut()</code> into a character vector, so the agegroup column
+will contain the age group labels as character strings.</p>
+</div>
 <div id="back-to-overview" class="section level5">
 <h5><a href="overview_of_workshop.html"> back to overview</a></h5>
 </div>
