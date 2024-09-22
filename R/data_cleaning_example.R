@@ -19,7 +19,7 @@ setwd ("path/to/your/data")
 # Data Cleaning on both Variables and Values.
 
 # Rounding function
-round_excel <- function(x, n = 0){
+construct_round_excel <- function(x, n = 0){
   scale <- 10^n
   rounded <- trunc(x * scale + sign(x) * 0.5) / scale
   return(rounded)
@@ -105,14 +105,14 @@ count_no_of_zero_bw <- sum(bdata$birth_weight==0)
 count_no_of_zero_bw
 
 bdata$birth_weight[bdata$birth_weight==0] <-mean(bdata$birth_weight, na.rm = TRUE)
-#round_excel(unique(bdata$birth_weight),2)        
+#construct_round_excel(unique(bdata$birth_weight),2)        
 glue('We have replaces {count_no_of_zero_bw} values')
 
 # Replace missing data with mean value  
 bdata$gestation_age_at_birth_in_weeks
 bdata$gestation_age_at_birth_in_weeks[is.na(bdata$gestation_age_at_birth_in_weeks)]<- mean(bdata$gestation_age_at_birth_in_weeks, na.rm = TRUE)
 
-round_excel(bdata$gestation_age_at_birth_in_weeks,2)  
+construct_round_excel(bdata$gestation_age_at_birth_in_weeks,2)  
 
 # Count the no of missing values from birth data
 n <- sum(is.na(bdata$gestation_age_at_birth_in_week))	
