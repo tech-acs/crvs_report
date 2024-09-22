@@ -44,7 +44,7 @@ birth_estimates <- construct_age_group(birth_estimates, "age")
 ###   BIRTHS
 #####################################
 # Load the birth data
-birth_data <- read_sample_birth_data()
+birth_data <- construct_sample_birth_data()
 
 # Add timeliness data
 birth_data <- construct_timeliness(birth_data)
@@ -63,7 +63,7 @@ birth_data <- construct_age_group(birth_data, "birth3b")
 #####################################
 
 # Load the death data
-death_data <- read_sample_death_data()
+death_data <- construct_sample_death_data()
 # Add dobyr
 death_data <- construct_year(death_data, date_col = "death1a", year_col = "dodyr")
 # Add leading groups data
@@ -74,9 +74,9 @@ death_data <- construct_leading_groups(death_data, age_col = 'death2b', age_grou
 #####################################
 
 # Load the marriage data
-marriage_data <- read_sample_marriage_data()
+marriage_data <- construct_sample_marriage_data()
 # Load the death data
-divorce_data <- read_sample_divorce_data()
+divorce_data <- construct_sample_divorce_data()
 
 ## HERE THERE SHOULD BE A FILTER OF THE DATA LOADED USING THE BIRTH VARIABLES
 ## HERE THERE SHOULD BE A VARIABLE RENAMING USING THE MAPPERS
@@ -96,7 +96,7 @@ for (sect_num in sectnumbs) {
   full_var_name <- paste0(base_name, sect_num)
   sub_list <- eval(parse(text = full_var_name))
   if (is.null(sub_list)) {
-    tables_to_add <- select_tables(as.character(sect_num), all_tables)
+    tables_to_add <- handle_table_selection(as.character(sect_num), all_tables)
     tables_to_run <- c(tables_to_run, tables_to_add)
     message <- paste("For Section ", sect_num, " adding all tables: ", length(tables_to_add), " added.")
     print(message)
@@ -126,7 +126,7 @@ filtered_tables <- Filter(Negate(is.null), filtered_tables)
 # Iterate over the filtered tables and call the respective functions
 for (table in filtered_tables) {
   function_name <- table$function_name
-  args <- convert_config_args(table$function_args)
+  args <- handle_config_args(table$function_args)
   if (exists(function_name)) {
     cat("Running function for table_id:", table$table_id, "\n")
     do.call(function_name, args)
@@ -137,4 +137,4 @@ for (table in filtered_tables) {
 
 # Convert all the .csv files into .xlsx files
 output_xls_tables_path <- paste(output_tables_path, "output.xlsx")
-convert_csv_xlsx(input_path = output_tables_path, output_path = output_xls_tables_path)
+handle_csv_xlsx(input_path = output_tables_path, output_path = output_xls_tables_path)
