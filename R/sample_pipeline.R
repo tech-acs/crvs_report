@@ -3,6 +3,9 @@ library(yaml)
 library(crvsreportpackage)
 library(rlang)
 library(dplyr)
+library(tidyr)
+library(stringr)
+library(janitor)
 
 # Load the configuration
 config <- yaml.load_file("./config/config.yml")
@@ -44,7 +47,7 @@ birth_estimates <- construct_age_group(birth_estimates, "age")
 ###   BIRTHS
 #####################################
 # Load the birth data
-birth_data <- read_sample_birth_data()
+birth_data <- read.csv("./data/raw/birth_data_processed.csv", na.strings = c("\\N", "NA", ""))
 
 # Add timeliness data
 birth_data <- construct_timeliness(birth_data)
@@ -52,12 +55,39 @@ birth_data <- construct_timeliness(birth_data)
 birth_data <- construct_year(birth_data, date_col = "birth1a", year_col = "dobyr")
 # Add boryr
 birth_data <- construct_year(birth_data, date_col = "birth1b",  year_col = "doryr")
-# Add empty birth1j
-birth_data <- construct_empty_var(birth_data)
+# Add age of mother
+birth_data$birth3a <- as.Date(birth_data$birth3a)
+birth_data$birth3b <- as.numeric(difftime(as.Date(birth_data$birth1a),
+                                          as.Date(birth_data$birth3a)),
+                                 unit="weeks") / 52.25
+birth_data$birth3b <- floor(birth_data$birth3b)
+
 # Add fertility age groups
 birth_data <- construct_age_group(birth_data, "birth3b")
 
+# Drop birth dates that 
+birth_data <- birth_data %>% drop_na(dobyr)
+birth_data = birth_data %>%
+  filter(dobyr < 2024)
+birth_data <- birth_data %>% drop_na()
 
+# Add empty birth1j
+birth_data <- construct_empty_var(birth_data)
+
+# Refactor the sex variable
+birth_data <- birth_data %>% 
+  mutate(birth2a = str_replace(birth2a, "F", "female")) %>% 
+  mutate(birth2a = str_replace(birth2a, "M", "male"))
+
+birth_data$birth3n <- "Rural"
+
+
+birth_data$month_reg <- format(birth_data$birth1b, "%m")
+birth_data$month_birth <- format(birth_data$birth1a, "%m")
+birth_data$month_yreg <- as.numeric(birth_data$month_reg)*0.01
+birth_data$month_ybirth <- as.numeric(birth_data$month_birth)*0.01
+birth_data$month_yreg <- birth_data$doryr + birth_data$month_yreg 
+birth_data$month_ybirth <- birth_data$dobyr + birth_data$month_ybirth
 #####################################
 ###   DEATHS
 #####################################
@@ -138,3 +168,57 @@ for (table in filtered_tables) {
 # Convert all the .csv files into .xlsx files
 output_xls_tables_path <- paste(output_tables_path, "output.xlsx")
 convert_csv_xlsx(input_path = output_tables_path, output_path = output_xls_tables_path)
+
+
+
+# Generate Table 3.2
+output <- birth_data |>
+  filter(is.na(birth1j) & !is.na(doryr) &
+           dobyr %in% generate_year_sequence(2023)) |>
+  group_by(doryr, dobyr) |>
+  summarise(Total = n())
+
+output2 <- output %>%
+  group_by(doryr) %>%
+  summarise(total = sum(Total))
+
+output <- output %>%
+  left_join(output2, by = c("doryr" = "doryr")) %>%
+  mutate(Percentage := round_excel((Total/ total) * 100, 2)) %>%
+  select(-c(total, Total)) |>
+  pivot_wider(names_from = doryr, values_from = Percentage, values_fill = 0)
+
+
+
+# Generate Table 4.2
+output42 <- birth_data |>
+  filter(dobyr == 2023 & is.na(birth1j)) |>
+  group_by(birth1c, birth2a) |>
+  summarise(total = n()) |>
+  pivot_wider(names_from = birth2a, values_from = total, values_fill = 0) |>
+  mutate(ratio = round_excel(male/female,1))
+
+# Generate Table Month and place of registration
+output_month_registration <- birth_data |>
+  filter(dobyr == 2023 & is.na(birth1j)) |>
+  group_by(birth1c, month_reg) |>
+  summarise(total = n()) |>
+  pivot_wider(names_from = month_reg, values_from = total, values_fill = 0) |>
+  adorn_totals("row")
+
+# Generate Table Month and place of registration
+output_month_birth <- birth_data |>
+  filter(dobyr == 2023 & is.na(birth1j)) |>
+  group_by(birth1c, month_birth) |>
+  summarise(total = n()) |>
+  pivot_wider(names_from = month_birth, values_from = total, values_fill = 0) |>
+  adorn_totals("row")
+
+# Generate Table Month and place of registration
+output_month_birth <- birth_data |>
+  filter(is.na(birth1j)) |>
+  group_by(birth1c, month_birth) |>
+  summarise(total = n()) |>
+  pivot_wider(names_from = month_birth, values_from = total, values_fill = 0) |>
+  adorn_totals("row")
+

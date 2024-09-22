@@ -16,8 +16,8 @@ default:
   # If section has an empty string (section_x: [""]) no tables will be run
   # To run particular tables, run their table_id (section_3: ["3_2","3_4"])
   tables_selected:
-    section_3: [""]
-    section_4:
+    section_3: ["3_2"]
+    section_4: ["4_3"]
     section_5: [""]
     section_6: ["6_1", "6_2"]
     section_7: [""]
@@ -345,7 +345,7 @@ default:
       function_args:
         data: birth_data
         date_var: dobyr
-        data_year: 2020
+        data_year: 2023
         tablename: "Table_4_3"
         output_path: output_tables_path
     - table_id: 4_4
