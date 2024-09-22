@@ -22,6 +22,7 @@
 .Rproj.user/**
 
 # Working Data
+
 data/processed/*
 data/raw/*
 outputs/*
@@ -51,13 +52,14 @@ outputs/*
 *.Rmd
 *.rmd
 
+
 # Produced vignettes
 vignettes/*.html
 vignettes/*.pdf
 
 # Produced tables
-outputs/figures/*
-outputs/tables/*
+outputs/*
+outputs/*
 
 # Data reports
 data_reports/
@@ -88,6 +90,9 @@ Desktop.ini
 # Excel files
 *.xlsx
 *.xls
+
+# csv files
+*.csv
 
 # Temporary files
 *.tmp
