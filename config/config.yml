@@ -16,10 +16,10 @@ default:
   # If section has an empty string (section_x: [""]) no tables will be run
   # To run particular tables, run their table_id (section_3: ["3_2","3_4"])
   tables_selected:
-    section_3: ["3_2"]
-    section_4: ["4_3"]
+    section_3: [""]
+    section_4: ["4_8", "4_9", "4_10"]
     section_5: [""]
-    section_6: ["6_1", "6_2"]
+    section_6: [""]
     section_7: [""]
     section_8: [""]
   

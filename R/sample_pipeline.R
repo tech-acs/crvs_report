@@ -1,11 +1,20 @@
 # This script provides a pipeline to run with the test data in the package.
 library(yaml)
-library(crvsreportpackage)
 library(rlang)
 library(dplyr)
 library(tidyr)
 library(stringr)
 library(janitor)
+
+# Install the VS Report package
+#install.packages("devtools")
+#library(devtools)
+#devtools::install_github("tech-acs/vsreport")
+
+library(vsreport)
+
+
+
 
 # Load the configuration
 config <- yaml.load_file("./config/config.yml")
@@ -165,60 +174,4 @@ for (table in filtered_tables) {
   }
 }
 
-# Convert all the .csv files into .xlsx files
-output_xls_tables_path <- paste(output_tables_path, "output.xlsx")
-handle_csv_xlsx(input_path = output_tables_path, output_path = output_xls_tables_path)
-
-
-
-# Generate Table 3.2
-output <- birth_data |>
-  filter(is.na(birth1j) & !is.na(doryr) &
-           dobyr %in% generate_year_sequence(2023)) |>
-  group_by(doryr, dobyr) |>
-  summarise(Total = n())
-
-output2 <- output %>%
-  group_by(doryr) %>%
-  summarise(total = sum(Total))
-
-output <- output %>%
-  left_join(output2, by = c("doryr" = "doryr")) %>%
-  mutate(Percentage := round_excel((Total/ total) * 100, 2)) %>%
-  select(-c(total, Total)) |>
-  pivot_wider(names_from = doryr, values_from = Percentage, values_fill = 0)
-
-
-
-# Generate Table 4.2
-output42 <- birth_data |>
-  filter(dobyr == 2023 & is.na(birth1j)) |>
-  group_by(birth1c, birth2a) |>
-  summarise(total = n()) |>
-  pivot_wider(names_from = birth2a, values_from = total, values_fill = 0) |>
-  mutate(ratio = round_excel(male/female,1))
-
-# Generate Table Month and place of registration
-output_month_registration <- birth_data |>
-  filter(dobyr == 2023 & is.na(birth1j)) |>
-  group_by(birth1c, month_reg) |>
-  summarise(total = n()) |>
-  pivot_wider(names_from = month_reg, values_from = total, values_fill = 0) |>
-  adorn_totals("row")
-
-# Generate Table Month and place of registration
-output_month_birth <- birth_data |>
-  filter(dobyr == 2023 & is.na(birth1j)) |>
-  group_by(birth1c, month_birth) |>
-  summarise(total = n()) |>
-  pivot_wider(names_from = month_birth, values_from = total, values_fill = 0) |>
-  adorn_totals("row")
-
-# Generate Table Month and place of registration
-output_month_birth <- birth_data |>
-  filter(is.na(birth1j)) |>
-  group_by(birth1c, month_birth) |>
-  summarise(total = n()) |>
-  pivot_wider(names_from = month_birth, values_from = total, values_fill = 0) |>
-  adorn_totals("row")
 
